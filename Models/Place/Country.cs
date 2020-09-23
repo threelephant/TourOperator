@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Security;
 
 namespace TourOperator.Models
 {
@@ -7,6 +6,6 @@ namespace TourOperator.Models
     {
         public int CountryId { get; set; }
         public string Name { get; set; }
-        public List<Hotel> Hotels { get; set; }
+        public List<Town> Towns { get; set; }
     }
 }
