@@ -93,3 +93,4 @@ C:\Users\Петр\source\TourOperator\bin\Debug\netcoreapp3.1\Npgsql.EntityFrame
 C:\Users\Петр\source\TourOperator\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\Петр\source\TourOperator\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
 C:\Users\Петр\source\TourOperator\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Петр\source\TourOperator\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_TourLayout.cshtml.g.cs
