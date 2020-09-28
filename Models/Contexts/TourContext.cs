@@ -18,6 +18,7 @@ namespace TourOperator.Models
         public DbSet<Town> Towns { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Airport> Airports { get; set; }
+        public DbSet<Flight> Flights { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public TourOperatorContext()
         {
@@ -27,14 +28,14 @@ namespace TourOperator.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            
             modelBuilder.Entity<Tour>()
-                .HasOne(t => t.AirportArrival)
+                .HasOne(t => t.FlightArrival)
                 .WithMany(a => a.ToursArrival)
-                .HasForeignKey(t => t.AirportArrivalId);
+                .HasForeignKey(t => t.FlightArrivalId);
 
             modelBuilder.Entity<Tour>()
-                .HasOne(t => t.AirportDeparture)
+                .HasOne(t => t.FlightDeparture)
                 .WithMany(a => a.ToursDestination)
-                .HasForeignKey(t => t.AirportDepartureId);
+                .HasForeignKey(t => t.FlightDepartureId);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

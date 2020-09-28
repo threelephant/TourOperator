@@ -8,7 +8,6 @@ namespace TourOperator.Models
         public string Name { get; set; }
         public int TownId { get; set; }
         public Town Town { get; set; }
-        public List<Tour> ToursArrival { get; set; }
-        public List<Tour> ToursDestination { get; set; }
+        public List<Flight> Flights { get; set; }
     }
 }

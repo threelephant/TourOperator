@@ -13,10 +13,6 @@ namespace TourOperator.Models
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public List<Review> Reviews { get; set; }
-        public List<UserTour> UserTours { get; set; }
-        public User()
-        {
-            UserTours = new List<UserTour>();
-        }
+        public List<Tour> Tours { get; set; }
     }
 }
