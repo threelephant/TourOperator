@@ -6,8 +6,8 @@ namespace TourOperator.Models
     public class User
     {
         public long UserId { get; set; }
-        public string login { get; set; }
-        public string password { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
         public bool isAdmin { get; set; } 
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -1,0 +1,24 @@
+@model TourOperator.ViewModels.LoginModel
+
+<h2>Вход на сайт</h2>
+
+<a asp-action="Register" asp-controller="Account">Регистрация</a>
+
+<form asp-action="Login" asp-controller="Account" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <div>
+            <label asp-for="Login">Введите логин</label>
+            <input type="text" asp-for="Login" />
+            <span asp-validation-for="Login" />
+        </div>
+        <div>
+            <label asp-for="Password">Введите пароль</label>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password" />
+        </div>
+        <div>
+            <input type="submit" value="Войти" />
+        </div>
+    </div>
+</form>

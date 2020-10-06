@@ -20,7 +20,7 @@ namespace TourOperator.Models
         public DbSet<Airport> Airports { get; set; }
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public TourOperatorContext()
+        public TourOperatorContext(DbContextOptions<TourOperatorContext> options) : base(options)
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();
@@ -36,18 +36,6 @@ namespace TourOperator.Models
                 .HasOne(t => t.FlightDeparture)
                 .WithMany(a => a.ToursDestination)
                 .HasForeignKey(t => t.FlightDepartureId);
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile("appsettings.json");
-            IConfigurationRoot config = builder.Build();
-
-            var password = new Security().GetPassword();
-            string connectionString = config.GetConnectionString("DefaultConnection") + new NetworkCredential("", password).Password;
-
-            optionsBuilder.UseNpgsql(connectionString);
         }
     }
 }

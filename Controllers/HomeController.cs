@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using TourOperator.Models;
 
@@ -18,9 +19,21 @@ namespace TourOperator.Controllers
             _logger = logger;
         }
 
+        [Route("user")]
+        public ViewResult Users() =>
+            View(new Dictionary<string, object>
+            { ["Placeholder"] = "Placeholder" });
+
         public IActionResult Index()
         {
             return View();
+        }
+
+        [Authorize]
+        [Route("check")]
+        public IActionResult Check()
+        {
+            return Content(User.Identity.Name);
         }
 
         [Route("privacy")]
