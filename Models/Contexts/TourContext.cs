@@ -20,11 +20,7 @@ namespace TourOperator.Models
         public DbSet<Airport> Airports { get; set; }
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public TourOperatorContext(DbContextOptions<TourOperatorContext> options) : base(options)
-        {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
+        public TourOperatorContext(DbContextOptions<TourOperatorContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            
             modelBuilder.Entity<Tour>()

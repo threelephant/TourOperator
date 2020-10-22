@@ -2,9 +2,7 @@
 
 <h2>Регистрация</h2>
 
-<a asp-action="Register" asp-controller="Account">Регистрация</a>
-
-<form asp-action="Login" asp-controller="Account" asp-antiforgery="true">
+<form asp-action="Register" asp-controller="Account" asp-antiforgery="true">
     <div asp-validation-summary="ModelOnly"></div>
     <div>
         <div>
@@ -21,7 +19,21 @@
             <label asp-for="ConfirmPassword">Повторите пароль</label>
             <input asp-for="ConfirmPassword" />
             <span asp-validation-for="ConfirmPassword" />
+        </div><div>
+            <label asp-for="LastName">Фамилия</label>
+            <input asp-for="LastName" />
+            <span asp-validation-for="LastName" />
         </div>
+       <div>
+            <label asp-for="FirstName">Имя</label>
+            <input asp-for="FirstName" />
+            <span asp-validation-for="FirstName" />
+        </div>
+       <div>
+            <label asp-for="MiddleName">Отчество</label>
+            <input asp-for="MiddleName" />
+        </div>
+       
         <div>
             <input type="submit" value="Регистрация" />
         </div>

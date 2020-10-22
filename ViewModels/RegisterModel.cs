@@ -14,5 +14,13 @@ namespace TourOperator.ViewModels
         [Compare("Password", ErrorMessage = "Пароль введен неверно")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Не указано имя")]
+        public string FirstName { get; set; }
+        
+        public string MiddleName { get; set; }
+
+        [Required(ErrorMessage = "Не указана фамилия")]
+        public string LastName { get; set; }
     }
 }

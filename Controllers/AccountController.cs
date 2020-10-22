@@ -7,15 +7,18 @@ using TourOperator.ViewModels;
 using TourOperator.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Logging;
 
 namespace TourOperator.Controllers
 {
     public class AccountController : Controller
     {
         private TourOperatorContext db;
-        public AccountController(TourOperatorContext context)
+        private readonly ILogger<AccountController> logger;
+        public AccountController(TourOperatorContext context, ILogger<AccountController> logger)
         {
             db = context;
+            this.logger = logger;
         }
         [HttpGet]
         public IActionResult Login()
@@ -29,13 +32,13 @@ namespace TourOperator.Controllers
         {
             if (ModelState.IsValid)
             {
+                var hashedPassword = new Security().Base64Encode(model.Password);
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Login == model.Login
-                    && u.Password == model.Password);
-                
+                            && u.Password == hashedPassword);
+                            
                 if (user != null)
                 {
-                    await Authenticate(model.Login);
-                    
+                    await Authenticate(model.Login);        
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректные логин и пароль");
@@ -56,14 +59,27 @@ namespace TourOperator.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Login == u.Login);
+                User user = await db.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
                 if (user == null)
                 {
-                    db.Users.Add(new User { Login = model.Login, Password = model.Password });
+                    var anyData = await db.Users.AnyAsync();
+                    long lastId = anyData ? await db.Users.MaxAsync(u => u.UserId) : 0;
+
+                    var hashedPassword = new Security().Base64Encode(model.Password);
+
+                    db.Users.Add(new User { 
+                                            UserId = lastId + 1, 
+                                            Login = model.Login, 
+                                            Password = hashedPassword, 
+                                            FirstName = model.FirstName, 
+                                            MiddleName = model.MiddleName, 
+                                            LastName = model.LastName,
+                                            isAdmin = false 
+                                          });
+                    
                     await db.SaveChangesAsync();
 
                     await Authenticate(model.Login);
-
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -89,8 +105,7 @@ namespace TourOperator.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

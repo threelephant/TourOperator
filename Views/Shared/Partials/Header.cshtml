@@ -1,10 +1,24 @@
+@{
+    var name = User.Identity.Name;
+}
+
 <nav class="red darken-4">
 <div class="nav-wrapper">
-    <a href="#" class="brand-logo">Турагенство "Красная птица"</a>
+    <a asp-action="Index" asp-controller="Home" class="brand-logo">Турагенство "Красная птица"</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
     <li><a href="sass.html">Туры</a></li>
     <li><a href="badges.html">Авиабилеты</a></li>
     <li><a href="collapsible.html">Бронирование</a></li>
+    @if (name != null)
+    {
+        <li><a asp-action="Logout" asp-controller="Account">Выйти</a></li>
+        <li>@name</li>
+    }
+    else
+    {
+        <li><a asp-action="Login" asp-controller="Account">Войти</a></li>
+        <li><a asp-action="Register" asp-controller="Account">Зарегистрироваться</a></li>
+    }
     </ul>
 </div>
 </nav>
