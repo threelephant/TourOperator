@@ -1,0 +1,23 @@
+@model TourOperator.Models.Hotel
+
+<h2>Добавить отель</h2>
+
+<form asp-action="Hotel" asp-controller="Admin" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name">Название отеля</label>
+        <input type="text" asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Description">Описание</label>
+        <input type="text" asp-for="Description" />
+    </div>
+    <div>
+        <label asp-for="TownId">Выбрать город</label>
+        <select asp-for="TownId" asp-items="ViewBag.Towns"></select>
+    </div>
+    @Html.DropDownList("i", (IEnumerable<SelectListItem>) ViewBag.Towns)
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+</form>

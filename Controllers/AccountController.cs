@@ -33,12 +33,13 @@ namespace TourOperator.Controllers
             if (ModelState.IsValid)
             {
                 var hashedPassword = new Security().Base64Encode(model.Password);
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Login == model.Login
-                            && u.Password == hashedPassword);
+                User user = await db.Users.Include(u => u.Role)
+                                          .FirstOrDefaultAsync(u => u.Login == model.Login
+                                                            && u.Password == hashedPassword);
                             
                 if (user != null)
                 {
-                    await Authenticate(model.Login);        
+                    await Authenticate(user);        
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректные логин и пароль");
@@ -67,19 +68,21 @@ namespace TourOperator.Controllers
 
                     var hashedPassword = new Security().Base64Encode(model.Password);
 
-                    db.Users.Add(new User { 
+                    User newUser = new User { 
                                             UserId = lastId + 1, 
                                             Login = model.Login, 
                                             Password = hashedPassword, 
                                             FirstName = model.FirstName, 
                                             MiddleName = model.MiddleName, 
                                             LastName = model.LastName,
-                                            isAdmin = false 
-                                          });
-                    
+                                            isAdmin = false,
+                                            RoleId = 2
+                                          };
+
+                    db.Users.Add(newUser);
                     await db.SaveChangesAsync();
 
-                    await Authenticate(model.Login);
+                    await Authenticate(newUser);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -91,11 +94,12 @@ namespace TourOperator.Controllers
             return View(model);
         }
 
-        private async Task Authenticate(string userName)
+        private async Task Authenticate(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);

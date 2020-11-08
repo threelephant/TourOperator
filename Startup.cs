@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using TourOperator.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
+using TourOperator.Data;
 
 namespace TourOperator
 {
