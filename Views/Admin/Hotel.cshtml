@@ -1,4 +1,4 @@
-@model TourOperator.Models.Hotel
+@model Hotel
 
 <h2>Добавить отель</h2>
 
@@ -8,16 +8,42 @@
         <label asp-for="Name">Название отеля</label>
         <input type="text" asp-for="Name" />
     </div>
+    
     <div>
         <label asp-for="Description">Описание</label>
-        <input type="text" asp-for="Description" />
+        <textarea asp-for="Description"></textarea>
     </div>
+    
     <div>
-        <label asp-for="TownId">Выбрать город</label>
+        <label asp-for="PricePerNight">Цена за ночь</label>
+        <input type="number" asp-for="PricePerNight" min="0" value="0" step=".01">
+    </div>
+    
+    <div>
+        <label asp-for="TownId">Город нахождения отеля</label>
         <select asp-for="TownId" asp-items="ViewBag.Towns"></select>
     </div>
-    @Html.DropDownList("i", (IEnumerable<SelectListItem>) ViewBag.Towns)
+    
+    <div>
+        <label asp-for="RaitingId">Количество звезд</label>
+        <select asp-for="RaitingId" asp-items="ViewBag.Raitings"></select>
+    </div>
+    
+    <div>
+        <label asp-for="FoodId">Питание</label>
+        <select asp-for="FoodId" asp-items="ViewBag.Foods"></select>
+    </div>
+    
     <div>
         <input type="submit" value="Добавить" />
     </div>
 </form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(() => {
+            $('select').formSelect();
+        })
+    </script>
+}

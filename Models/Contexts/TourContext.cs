@@ -38,6 +38,16 @@ namespace TourOperator.Models
                 .HasOne(t => t.FlightDeparture)
                 .WithMany(a => a.ToursDestination)
                 .HasForeignKey(t => t.FlightDepartureId);
+
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.AirportArrival)
+                .WithMany(a => a.FlightsArrival)
+                .HasForeignKey(f => f.AirportArrivalId);
+            
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.AirportDeparture)
+                .WithMany(a => a.FlightsDeparture)
+                .HasForeignKey(f => f.AirportDepartureId);
         }
     }
 }

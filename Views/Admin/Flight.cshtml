@@ -1,0 +1,34 @@
+﻿@model Flight
+
+<h2>Добавить полет</h2>
+
+<form asp-action="Flight" asp-controller="Admin" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Price">Цена билета</label>
+        <input type="number" asp-for="Price" min="0" value="0" step=".01">
+    </div>
+    
+    <div>
+        <label asp-for="AirportArrivalId">Аэропорт отправления</label>
+        <select asp-for="AirportArrivalId" asp-items="ViewBag.Airports"></select>
+    </div>
+    
+    <div>
+        <label asp-for="AirportDepartureId">Аэропорт прибытия</label>
+        <select asp-for="AirportDepartureId" asp-items="ViewBag.Airports"></select>
+    </div>
+    
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(() => {
+            $('select').formSelect();
+        })
+    </script>
+}

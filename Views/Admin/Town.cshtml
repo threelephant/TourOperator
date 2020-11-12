@@ -1,0 +1,27 @@
+﻿@model Town
+
+<h2>Добавить город</h2>
+
+<form asp-action="Town" asp-controller="Admin" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name">Название города</label>
+        <input type="text" asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="CountryId">Страна</label>
+        <select asp-for="CountryId" asp-items="ViewBag.Countries"></select>
+    </div>
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(() => {
+            $('select').formSelect();
+        })
+    </script>
+}
