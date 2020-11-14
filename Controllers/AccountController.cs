@@ -67,6 +67,8 @@ namespace TourOperator.Controllers
                     long lastId = anyData ? await db.Users.MaxAsync(u => u.UserId) : 0;
 
                     var hashedPassword = new Security().Base64Encode(model.Password);
+                    
+                    var role = await db.Roles.FirstOrDefaultAsync(r => r.Name == "user");
 
                     User newUser = new User { 
                                             UserId = lastId + 1, 
@@ -76,7 +78,7 @@ namespace TourOperator.Controllers
                                             MiddleName = model.MiddleName, 
                                             LastName = model.LastName,
                                             isAdmin = false,
-                                            RoleId = 2
+                                            Role = role
                                           };
 
                     db.Users.Add(newUser);

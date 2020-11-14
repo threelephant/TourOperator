@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -10,10 +12,12 @@ namespace TourOperator.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
+        private readonly TourOperatorContext db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, TourOperatorContext db)
         {
             this.logger = logger;
+            this.db = db;
         }
 
         [Route("user")]
@@ -25,12 +29,25 @@ namespace TourOperator.Controllers
         {
             return View();
         }
-
-        [Authorize]
-        [Route("check")]
-        public IActionResult Check()
+        
+        [Route("hotels")]
+        public IActionResult Hotels(int start = 0, int size = 5)
         {
-            return Content(User.Identity.Name);
+            ViewBag.Start = start;
+            ViewBag.Size = size;
+
+            int pagesCount = (int) Math.Ceiling(db.Hotels.Count() / (double) size);
+            ViewBag.PagesCount = pagesCount;
+
+            int currentPage = start / size + 1;
+            ViewBag.CurrentPage = currentPage;
+
+            ViewBag.Hotels = db.Hotels.OrderBy(h => h.Name)
+                                      .Skip(start)
+                                      .Take(size)
+                                      .ToList();
+
+            return View();
         }
 
         [Route("privacy")]

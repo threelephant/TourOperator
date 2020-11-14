@@ -2,4 +2,11 @@
     ViewData["Title"] = "ADMIN PANEL";
 }
 
-<div>ADMIN PANEL</div>
+<h2>Панель управления админа</h2>
+<div class="collection">
+    <a href='@Url.ActionLink("hotel", "admin")' class="collection-item">Добавить отель</a>
+    <a href='@Url.ActionLink("country", "admin")' class="collection-item">Добавить страну</a>
+    <a href='@Url.ActionLink("town", "admin")' class="collection-item">Добавить город</a>
+    <a href='@Url.ActionLink("airport", "admin")' class="collection-item">Добавить аэропорт</a>
+    <a href='@Url.ActionLink("flight", "admin")' class="collection-item">Добавить полет</a>
+</div>

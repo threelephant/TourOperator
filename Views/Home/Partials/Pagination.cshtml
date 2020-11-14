@@ -1,0 +1,53 @@
+<ul class="pagination">
+  @if (ViewBag.Start - ViewBag.Size < 0)
+  {
+    <li class="disabled">
+      <a href="">
+        <i class="material-icons">chevron_left</i>
+      </a>
+    </li>
+  }
+  else
+  {
+    <li class="waves-effect">
+      <a href='@Url.ActionLink("Hotels", "Home", new { start = ViewBag.Start - ViewBag.Size, size = ViewBag.Size })'>
+        <i class="material-icons">chevron_left</i>
+      </a>
+    </li>
+  }
+    @for (int i = 1; i <= ViewBag.PagesCount; i++)
+    {
+        if (i == ViewBag.CurrentPage)
+        {
+            <li class="active">
+              <a href='@Url.ActionLink("Hotels", "Home", new { start = ViewBag.Size * (i - 1), size = ViewBag.Size })'>
+                @i
+              </a>
+            </li>
+        }
+        else
+        {
+            <li class="waves-effect">
+              <a href='@Url.ActionLink("Hotels", "Home", new { start = ViewBag.Size * (i - 1), size = ViewBag.Size })'>
+                @i
+              </a>
+            </li>
+        }
+    }
+    @if (ViewBag.Start / ViewBag.Size + 1 >= ViewBag.PagesCount)
+    {
+        <li class="disabled">
+          <a href="">
+            <i class="material-icons">chevron_right</i>
+          </a>
+        </li>
+    }
+    else
+    {
+      <li class="waves-effect">
+        <a href='@Url.ActionLink("Hotels", "Home", new { start = ViewBag.Start + ViewBag.Size, size = ViewBag.Size })'>
+          <i class="material-icons">chevron_right</i>
+        </a>
+      </li>
+    }
+  </ul>

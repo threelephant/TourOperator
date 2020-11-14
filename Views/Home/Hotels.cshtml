@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Отели";
+}
+
+@model Hotel
+
+<br>
+<partial name="Partials/Pagination" />
+
+<ul>
+@foreach (var hotel in ViewBag.Hotels)
+{
+  <div class="col s12 m7">
+    <h2 class="header">@hotel.Name</h2>
+    <div class="card horizontal">
+      <div class="card-image">
+        <img src="https://lorempixel.com/100/190/nature/6">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          <p>@hotel.Description</p>
+        </div>
+        <div class="card-action">
+          <a href="#">This is a link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+</ul>
+
+<partial name="Partials/Pagination" />
