@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TourOperator.ViewModels
 {
-    public class AddHotel
+    public class HotelReviews
     {
         public Hotel Hotel { get; set; }
-        public IEnumerable<SelectListItem> Towns { get; set; }
+        public Review Review { get; set; }
     }
 }

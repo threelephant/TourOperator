@@ -1,0 +1,22 @@
+@model Review
+
+<h4>Добавить комментарий на отель</h4>
+
+<form asp-action="Review" asp-controller="Home" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="UserRaiting">Рейтинг</label>
+        <input type="number" asp-for="UserRaiting" min="0" value="0">
+    </div>
+    
+    <div>
+        <label asp-for="Text">Комментарий</label>
+        <textarea asp-for="Text"></textarea>
+    </div>
+
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+
+    @* <p>@ViewB</p> *@
+</form>

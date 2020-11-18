@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = @ViewBag.Hotel.Name;
+}
+
+<h2>@ViewBag.Hotel.Name</h2>
+<p>@ViewBag.Hotel.Raiting.Name</p>
+<p>@ViewBag.Hotel.PricePerNight</p>
+<p>@ViewBag.Hotel.Description</p>
+<p>@ViewBag.Hotel.Food.Name</p>
+
+@model Review
+
+@if (ViewBag.IsCommented)
+{
+    <p>Спасибо за комментарий!</p>
+}
+else if (User.Identity.Name != null)
+{
+<h4>Добавить комментарий на отель</h4>
+<form asp-action="review" asp-controller="home" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="UserRaiting">Рейтинг</label>
+        <input type="number" asp-for="UserRaiting" min="0" value="0">
+    </div>
+    
+    <div>
+        <label asp-for="Text">Комментарий</label>
+        <textarea asp-for="Text"></textarea>
+    </div>
+
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+
+    <input asp-for="HotelId" type="hidden" value="@ViewBag.Hotel.HotelId" />
+</form>
+}
+else
+{
+    <h5>Войдите или зарегистрируйтесь для комментирования</h5>
+    <a class="waves-effect waves-light btn" asp-action="Login" asp-controller="Account">Войти</a>
+    <a class="waves-effect waves-light btn" asp-action="Register" asp-controller="Account">Регистрация</a>
+}
+
+@foreach (var review in ViewBag.Hotel.Reviews)
+{
+    <p>@review.User.Login</p>
+    <p>@review.UserRaiting</p>
+    <p>@review.Text</p>
+}

@@ -1,14 +1,17 @@
 @{
     var name = User.Identity.Name;
+    var isAdmin = User.IsInRole("admin");
 }
 
 <nav class="red darken-4">
     <div class="nav-wrapper">
         <a asp-action="Index" asp-controller="Home" class="brand-logo" id="tour-logo">Турагенство "Красная птица"</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="sass.html">Туры</a></li>
-        <li><a href="badges.html">Авиабилеты</a></li>
-        <li><a href="collapsible.html">Бронирование</a></li>
+        <li><a asp-action="hotels" asp-controller="home">Отели</a></li>
+        @if (isAdmin)
+        {
+            <li><a asp-action="index" asp-controller="admin">Панель админа</a></li>
+        }
         @if (name != null)
         {
             <li><a asp-action="Logout" asp-controller="Account">Выйти</a></li>

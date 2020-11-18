@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using TourOperator.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TourOperator.Controllers
 {
@@ -48,6 +49,37 @@ namespace TourOperator.Controllers
                                       .ToList();
 
             return View();
+        }
+
+        [Route("hotel/{id}")]
+        public IActionResult Hotel(int id)
+        {
+            var hotel = db.Hotels.Include(h => h.Raiting)
+                                 .Include(h => h.Food)
+                                 .Include(h => h.Reviews)
+                                    .ThenInclude(r => r.User)
+                                 .FirstOrDefault(h => h.HotelId == id);
+
+            var users = from review in hotel.Reviews
+                        select review.User.Login; 
+            
+            ViewBag.IsCommented = users.Contains(User.Identity.Name);
+
+            ViewBag.Hotel = hotel;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Review(Review review)
+        {
+            var user = db.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
+            review.UserId = user.UserId;
+            
+            db.Reviews.Add(review);
+            db.SaveChanges();
+
+            return RedirectToAction("Hotels", "Home");
         }
 
         [Route("privacy")]

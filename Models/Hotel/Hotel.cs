@@ -15,5 +15,10 @@ namespace TourOperator.Models
         public int TownId { get; set; }
         public Town Town { get; set; }
         public List<Tour> Tours { get; set; }
+        public List<Review> Reviews { get; set; }
+        public Hotel()
+        {
+            Reviews = new List<Review>();
+        }
     }
 }
