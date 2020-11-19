@@ -1,3 +1,46 @@
 @{
-    ViewData["Title"] = "Туры";
+    ViewData["Title"] = "Заказать";
+}
+
+@model Tour
+
+<h2>Заказать тур</h2>
+
+<form asp-action="addtour" asp-controller="home" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    
+    <div>
+        <label asp-for="AdultNumber">Количество взрослых</label>
+        <input type="number" asp-for="AdultNumber" min="0" value="0">
+    </div>
+    
+    <div>
+        <label asp-for="ChildNumber">Количество детей</label>
+        <input type="number" asp-for="ChildNumber" min="0" value="0">
+    </div>
+
+    <div>
+        <label asp-for="TimeArrival">Дата прибытия в отель</label>
+        <input type="date" asp-for="TimeArrival">
+    </div>
+
+    <div>
+        <label asp-for="TimeDeparture">Дата окончания</label>
+        <input type="date" asp-for="TimeDeparture">
+    </div>
+
+    <input asp-for="HotelId" type="hidden" value="@ViewBag.HotelId" />
+    
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(() => {
+            $('select').formSelect();
+        })
+    </script>
 }

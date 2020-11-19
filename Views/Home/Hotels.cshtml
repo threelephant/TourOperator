@@ -21,7 +21,7 @@
           <p>@hotel.Description</p>
         </div>
         <div class="card-action">
-          <a asp-action="hotel" asp-controller="home">@hotel.Name</a>
+          @Html.ActionLink($"{hotel.Name}", "hotel", new { @id = hotel.HotelId })
         </div>
       </div>
     </div>

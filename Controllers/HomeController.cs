@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using TourOperator.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TourOperator.Controllers
 {
@@ -59,12 +61,23 @@ namespace TourOperator.Controllers
                                  .Include(h => h.Reviews)
                                     .ThenInclude(r => r.User)
                                  .FirstOrDefault(h => h.HotelId == id);
+            if (hotel == null)
+            {
+                return NotFound();
+            }
 
-            var users = from review in hotel.Reviews
+            var r = db.Reviews.FirstOrDefault(r => r.HotelId == id);
+            if (r != null)
+            {
+                var users = from review in hotel.Reviews
                         select review.User.Login; 
             
-            ViewBag.IsCommented = users.Contains(User.Identity.Name);
-
+                ViewBag.IsCommented = users.Contains(User.Identity.Name);
+            }
+            else
+            {
+                ViewBag.IsCommented = false;
+            }
             ViewBag.Hotel = hotel;
 
             return View();
@@ -78,6 +91,30 @@ namespace TourOperator.Controllers
             
             db.Reviews.Add(review);
             db.SaveChanges();
+
+            return RedirectToAction("Hotels", "Home");
+        }
+
+        [HttpGet]
+        [Route("tour/{hotelId}")]
+        public IActionResult Tour(int hotelId)
+        {
+            ViewBag.HotelId = hotelId;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTour(Tour tour)
+        {
+            var hotelPricePerNight = (await db.Hotels.FirstOrDefaultAsync(h => h.HotelId == tour.HotelId)).PricePerNight;
+            
+            tour.Price = hotelPricePerNight * (tour.AdultNumber + tour.ChildNumber / 2);
+            tour.User = await db.Users.FirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            tour.TimeBooking = DateTime.Now;
+
+            await db.Tours.AddAsync(tour);
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Hotels", "Home");
         }

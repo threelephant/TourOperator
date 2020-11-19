@@ -13,11 +13,10 @@ namespace TourOperator.Models
         public Hotel Hotel { get; set; }
         public byte AdultNumber { get; set; }
         public byte ChildNumber { get; set; }
-        public byte InfantNumnber { get; set; }
         public decimal Price { get; set; }
-        public int FlightArrivalId { get; set; }
+        public int? FlightArrivalId { get; set; }
         public Flight FlightArrival { get; set; }
-        public int FlightDepartureId { get; set; }
+        public int? FlightDepartureId { get; set; }
         public Flight FlightDeparture { get; set; }
         public DateTime TimeArrival { get; set; }
         public DateTime TimeDeparture { get; set; }
