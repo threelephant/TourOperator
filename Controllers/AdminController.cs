@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +8,13 @@ using Microsoft.Extensions.Logging;
 using TourOperator.Models;
 using TourOperator.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace TourOperator.Controllers
 {
@@ -16,10 +23,14 @@ namespace TourOperator.Controllers
     {
         private readonly TourOperatorContext db;
         private readonly ILogger<AccountController> logger;
-        public AdminController(TourOperatorContext context, ILogger<AccountController> logger)
+        private readonly IWebHostEnvironment appEnvironment;
+        public AdminController(TourOperatorContext context, 
+                               ILogger<AccountController> logger, 
+                               IWebHostEnvironment appEnvironment)
         {
             db = context;
             this.logger = logger;
+            this.appEnvironment = appEnvironment;
         }
         public IActionResult Index()
         {
@@ -131,6 +142,65 @@ namespace TourOperator.Controllers
             db.SaveChanges();
             
             return Flight();
+        }
+
+        [HttpGet]
+        public IActionResult File()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> File(IFormFile uploadedFile)
+        {
+            string path = "/img/" + uploadedFile.FileName;
+            using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
+            {
+                await uploadedFile.CopyToAsync(fileStream);
+            }
+            
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Stats()
+        {
+            var groupsReviews = from hotel in db.Hotels
+                                join review in db.Reviews on hotel equals review.Hotel
+                                group review by hotel.Name into g
+                                select new { 
+                                                Name = g.Key, 
+                                                Average = g.Average(g => g.UserRaiting)
+                                            };
+
+            var labelsReviews = groupsReviews.Select(t => t.Name).ToList();
+            var dataReviews = groupsReviews.Select(t => t.Average).ToList();
+
+            var jsonLabelsReviews = JsonSerializer.Serialize(labelsReviews);
+            var jsonDataReviews = JsonSerializer.Serialize(dataReviews);
+
+            ViewBag.Labels = jsonLabelsReviews;
+            ViewBag.Data = jsonDataReviews;
+
+            var groupsTours = from hotel in db.Hotels
+                              join tour in db.Tours on hotel equals tour.Hotel
+                              group tour by hotel.Name into g
+                              select new { 
+                                              Name = g.Key, 
+                                              Count = g.Count()
+                                         };
+
+            var labelsTours = groupsTours.Select(t => t.Name).ToList();
+            var dataTours = groupsTours.Select(t => t.Count).ToList();
+
+            var jsonLabelsTours = JsonSerializer.Serialize(labelsTours);
+            var jsonDataTours = JsonSerializer.Serialize(dataTours);
+
+            ViewBag.LabelsTours = jsonLabelsTours;
+            ViewBag.DataTours = jsonDataTours;
+            
+            return View();
         }
     }
 }

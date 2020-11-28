@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Статистика";
+}
+
+<h2>Статисика</h2>
+<h3>Средняя оценка отелей</h3>
+<div class="chart-container" style="height:300px; width:650px">
+    <canvas id="myChart"></canvas>
+</div>
+<h3>Количество туров</h3>
+<div class="chart-container" style="height:300px; width:650px">
+    <canvas id="myChart2"></canvas>
+</div>
+<br>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(@ViewBag.Labels),
+                datasets: [{
+                    label: 'Средняя оценка отелей',
+                    data: @ViewBag.Data,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(@ViewBag.LabelsTours),
+                datasets: [{
+                    label: 'Количество туров',
+                    data: @ViewBag.DataTours,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    </script>
+}

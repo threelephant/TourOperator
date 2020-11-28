@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Мои туры";
+}
+
+<br>
+<h2>Мои туры</h2>
+<ul>
+@foreach (Tour tour in ViewBag.Tours)
+{
+  <h3>@tour.Hotel.Name</h3>
+  <p>@tour.AdultNumber</p>
+  <p>@tour.ChildNumber</p>
+  <p>@tour.Price</p>
+  <p>@tour.TimeArrival</p>
+  <p>@tour.TimeDeparture</p>
+  
+  @if (@tour.FlightDepartureId != null)
+  {
+    <p>@tour.FlightDeparture.AirportArrival.Name --> @tour.FlightDeparture.AirportDeparture.Name</p>
+  }
+  else
+  {
+    @Html.ActionLink($"Заказать билет до отеля", "flight", new { @id = tour.TourId, isDeparture = true })
+  }
+  
+  @if (@tour.FlightArrivalId != null)
+  {
+    <p>@tour.FlightArrival.AirportArrival.Name --> @tour.FlightArrival.AirportDeparture.Name</p>
+  }
+  else
+  {
+    @Html.ActionLink($"Заказать обратный билет", "flight", new { @id = tour.TourId, isDeparture = false })
+  }
+
+}
+</ul>

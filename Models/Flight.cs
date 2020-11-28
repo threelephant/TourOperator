@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace TourOperator.Models
 {
@@ -10,6 +11,7 @@ namespace TourOperator.Models
         public int AirportDepartureId { get; set; }
         public Airport AirportDeparture { get; set; }
         public decimal Price { get; set; }
+        public DateTime DateFlight { get; set; }
         public List<Tour> ToursArrival { get; set; }
         public List<Tour> ToursDestination { get; set; }
     }

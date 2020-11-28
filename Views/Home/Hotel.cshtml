@@ -8,6 +8,9 @@
 <p>@ViewBag.Hotel.Description</p>
 <p>@ViewBag.Hotel.Food.Name</p>
 
+@* <a class="waves-effect waves-light btn" asp-action="tour" new { @id = hotel }>Бронировать</a> *@
+@Html.ActionLink("Забронировать", "tour", new { @hotelId = @ViewBag.Hotel.HotelId })
+
 @model Review
 
 @if (ViewBag.IsCommented)

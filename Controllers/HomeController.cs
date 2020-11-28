@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System;
@@ -22,11 +22,6 @@ namespace TourOperator.Controllers
             this.logger = logger;
             this.db = db;
         }
-
-        [Route("user")]
-        public ViewResult Users() =>
-            View(new Dictionary<string, object>
-            { ["Placeholder"] = "Placeholder" });
 
         public IActionResult Index()
         {
@@ -84,6 +79,8 @@ namespace TourOperator.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Review(Review review)
         {
             var user = db.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
@@ -105,6 +102,8 @@ namespace TourOperator.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> AddTour(Tour tour)
         {
             var hotelPricePerNight = (await db.Hotels.FirstOrDefaultAsync(h => h.HotelId == tour.HotelId)).PricePerNight;
@@ -116,13 +115,64 @@ namespace TourOperator.Controllers
             await db.Tours.AddAsync(tour);
             await db.SaveChangesAsync();
 
-            return RedirectToAction("Hotels", "Home");
+            return RedirectToAction("hotels");
         }
 
-        [Route("privacy")]
-        public IActionResult Privacy()
+        [HttpGet]
+        [Route("tours")]
+        [Authorize]
+        public IActionResult Tours()
         {
+            var user = User.Identity.Name;
+
+            var tours = db.Tours.Where(t => t.User.Login == user)
+                                .Include(t => t.Hotel)
+                                .Include(t => t.FlightArrival)
+                                    .ThenInclude(f => f.AirportArrival)
+                                .Include(t => t.FlightDeparture)
+                                    .ThenInclude(f => f.AirportDeparture)
+                                .OrderBy(t => t.TimeBooking);
+            
+            ViewBag.Tours = tours.ToList();
+
             return View();
+        }
+
+        [HttpGet]
+        [Route("flight/{id}")]
+        [Authorize]
+        public IActionResult Flight(long id, bool isDeparture)
+        {
+            ViewBag.Airports = from airport in db.Airports
+                select new SelectListItem { Text = airport.Name, Value = airport.AirportId.ToString() };
+
+            ViewBag.TourId = id;
+            ViewBag.IsDeparture = isDeparture;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult AddFlight(Flight flight, long tourId, bool isDeparture)
+        {
+            flight.Price = 10000;
+            db.Flights.Add(flight);
+            db.SaveChanges();
+
+            var tour = db.Tours.FirstOrDefault(t => t.TourId == tourId);
+            if (isDeparture)
+            {
+                tour.FlightDepartureId = flight.FlightId;
+            }
+            else
+            {
+                tour.FlightArrivalId = flight.FlightId;
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("tours");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
