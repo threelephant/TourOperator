@@ -3,41 +3,46 @@
 }
 
 <h2>@ViewBag.Hotel.Name</h2>
-<p>@ViewBag.Hotel.Raiting.Name</p>
-<p>@ViewBag.Hotel.PricePerNight</p>
-<p>@ViewBag.Hotel.Description</p>
-<p>@ViewBag.Hotel.Food.Name</p>
+<p class="grey-text text-darken-1 start-paragraph-text info">@ViewBag.Hotel.Raiting.Name звёзд</p>
+<p class="grey-text text-darken-1 start-paragraph-text info">Цена: @ViewBag.Hotel.PricePerNight рублей</p>
+<p class="grey-text text-darken-1 start-paragraph-text info">Питание: @ViewBag.Hotel.Food.Name</p>
+<p>@Html.Raw(@ViewBag.Hotel.Description)</p>
 
-@* <a class="waves-effect waves-light btn" asp-action="tour" new { @id = hotel }>Бронировать</a> *@
-@Html.ActionLink("Забронировать", "tour", new { @hotelId = @ViewBag.Hotel.HotelId })
+@Html.ActionLink("Забронировать", "tour", new { @hotelId = @ViewBag.Hotel.HotelId }, new {@class = "waves-effect waves-light btn-large"})
 
 @model Review
 
 @if (ViewBag.IsCommented)
 {
-    <p>Спасибо за комментарий!</p>
+    <br>
+    <p class="grey-text">Спасибо за комментарий!</p>
 }
 else if (User.Identity.Name != null)
 {
-<h4>Добавить комментарий на отель</h4>
+<h4>Добавить отзыв</h4>
+
+<div class="row">
+<div class="col s12 m6">
 <form asp-action="review" asp-controller="home" asp-antiforgery="true">
     <div asp-validation-summary="ModelOnly"></div>
     <div>
         <label asp-for="UserRaiting">Рейтинг</label>
-        <input type="number" asp-for="UserRaiting" min="0" value="0">
+        <p class="range-field">
+            <input type="range" asp-for="UserRaiting" min="1" max="5" />
+        </p>
     </div>
     
     <div>
         <label asp-for="Text">Комментарий</label>
-        <textarea asp-for="Text"></textarea>
+        <textarea class="materialize-textarea" asp-for="Text"></textarea>
     </div>
+    
+    <button class="btn waves-effect waves-light" type="submit" name="action">Добавить</button>
 
-    <div>
-        <input type="submit" value="Добавить" />
-    </div>
-
-    <input asp-for="HotelId" type="hidden" value="@ViewBag.Hotel.HotelId" />
+    <input type="hidden" asp-for="HotelId" value="@ViewBag.Hotel.HotelId" />
 </form>
+</div>
+</div>
 }
 else
 {
@@ -46,9 +51,24 @@ else
     <a class="waves-effect waves-light btn" asp-action="Register" asp-controller="Account">Регистрация</a>
 }
 
+@if (ViewBag.Hotel.Reviews.Count >= 1)
+{
+    <h4>Отзывы</h4>
+}
 @foreach (var review in ViewBag.Hotel.Reviews)
 {
-    <p>@review.User.Login</p>
-    <p>@review.UserRaiting</p>
-    <p>@review.Text</p>
+    
+    <div class="row">
+    <div class="col s12 m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Пользователь: @review.User.Login</span>
+          <p>@Html.Raw(@review.Text)</p>
+        </div>
+        <div class="card-action">
+          <p class="white-text">Оценка: @review.UserRaiting из 5</p>
+        </div>
+      </div>
+    </div>
+  </div>
 }

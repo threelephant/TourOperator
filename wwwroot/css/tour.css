@@ -1,4 +1,9 @@
-﻿#tour-logo {
+﻿p.info {
+    font-size: 20px;
+    margin: 0.5em 0;
+}
+
+#tour-logo {
     padding-left: 1em;
 }
 

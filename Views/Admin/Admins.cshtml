@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Изменение прав";
+}
+<h2>Изменение прав</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Админ</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var user in ViewBag.Users)
+{
+    if (user.Login == User.Identity.Name) continue;
+    <tr>
+        <td>@user.Login</td>
+        @if (user.Role.Name == "user")
+        {
+            <td>
+            <form asp-action="admins" asp-controller="admin" asp-antiforgery="true">
+                <input type="hidden" name="userId" value="@user.UserId" />
+                <input type="hidden" name="toAdmin" value="True" />
+                <button class="btn waves-effect waves-light" type="submit" name="action">Сделать админом</button>
+            </form>
+            </td>
+        }
+        else
+        {
+           <td>
+            <form asp-action="admins" asp-controller="admin" asp-antiforgery="true">
+                <input type="hidden" name="userId" value="@user.UserId" />
+                <input type="hidden" name="toAdmin" value="False" />
+                <button class="btn waves-effect waves-light" type="submit" name="action">Сделать обычным пользователем</button>
+            </form>
+            </td>
+        }
+        
+    </tr>
+}
+    </tbody>
+</table>

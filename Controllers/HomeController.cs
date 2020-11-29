@@ -85,11 +85,11 @@ namespace TourOperator.Controllers
         {
             var user = db.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
             review.UserId = user.UserId;
-            
+
             db.Reviews.Add(review);
             db.SaveChanges();
 
-            return RedirectToAction("Hotels", "Home");
+            return RedirectToAction(nameof(Hotels));
         }
 
         [HttpGet]

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Net.Http;
 using System.Text;
@@ -164,7 +165,52 @@ namespace TourOperator.Controllers
         }
 
         [HttpGet]
+        public IActionResult Admins()
+        {
+            var users = db.Users.Include(u => u.Role)
+                                .OrderByDescending(u => u.Role.Name)
+                                    .ThenBy(u => u.Login);
+            ViewBag.Users = users;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Admins(long userId, bool toAdmin = false)
+        {
+            var user = await db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (toAdmin)
+            {
+                user.RoleId = 1;
+            }
+            else
+            {
+                user.RoleId = 2;
+            }
+            
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Admins");
+        }
+
+        [HttpGet]
         public IActionResult Stats()
+        {
+            var avgUserRating = GetAvgUserRating();
+
+            ViewBag.Labels = avgUserRating.Item1;
+            ViewBag.Data = avgUserRating.Item2;
+
+            var countUserTours = GetCountUserTours();
+
+            ViewBag.LabelsTours = countUserTours.Item1;
+            ViewBag.DataTours = countUserTours.Item2;
+            
+            return View();
+        }
+
+        private (string, string) GetAvgUserRating()
         {
             var groupsReviews = from hotel in db.Hotels
                                 join review in db.Reviews on hotel equals review.Hotel
@@ -180,9 +226,11 @@ namespace TourOperator.Controllers
             var jsonLabelsReviews = JsonSerializer.Serialize(labelsReviews);
             var jsonDataReviews = JsonSerializer.Serialize(dataReviews);
 
-            ViewBag.Labels = jsonLabelsReviews;
-            ViewBag.Data = jsonDataReviews;
+            return (jsonLabelsReviews, jsonDataReviews);
+        }
 
+        private (string, string) GetCountUserTours()
+        {
             var groupsTours = from hotel in db.Hotels
                               join tour in db.Tours on hotel equals tour.Hotel
                               group tour by hotel.Name into g
@@ -197,10 +245,7 @@ namespace TourOperator.Controllers
             var jsonLabelsTours = JsonSerializer.Serialize(labelsTours);
             var jsonDataTours = JsonSerializer.Serialize(dataTours);
 
-            ViewBag.LabelsTours = jsonLabelsTours;
-            ViewBag.DataTours = jsonDataTours;
-            
-            return View();
+            return (jsonLabelsTours, jsonDataTours);
         }
     }
 }
