@@ -10,11 +10,16 @@
 <ul>
 @foreach (var hotel in ViewBag.Hotels)
 {
+  if (hotel.Image == "")
+  {
+    hotel.Image = "https://lorempixel.com/100/190/nature/6";
+  }
+  
   <div class="col s12 m7">
     <h2 class="header">@hotel.Name</h2>
     <div class="card horizontal">
       <div class="card-image">
-        <img src="https://lorempixel.com/100/190/nature/6">
+        <img src="@hotel.Image">
       </div>
       <div class="card-stacked">
         <div class="card-content">

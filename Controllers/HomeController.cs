@@ -89,7 +89,7 @@ namespace TourOperator.Controllers
             db.Reviews.Add(review);
             db.SaveChanges();
 
-            return RedirectToAction(nameof(Hotels));
+            return RedirectToAction("hotel",  new { id = review.HotelId });
         }
 
         [HttpGet]

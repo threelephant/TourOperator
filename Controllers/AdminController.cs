@@ -58,8 +58,16 @@ namespace TourOperator.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Hotel(Hotel hotel)
+        public IActionResult Hotel(Hotel hotel, IFormFile uploadedFile)
         {
+            string path = "/img/" + uploadedFile.FileName;
+            using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
+            {
+                uploadedFile.CopyTo(fileStream);
+            }
+
+            hotel.Image = path;
+
             db.Hotels.Add(hotel);
             db.SaveChanges();
             

@@ -77,7 +77,6 @@ namespace TourOperator.Controllers
                                             FirstName = model.FirstName, 
                                             MiddleName = model.MiddleName, 
                                             LastName = model.LastName,
-                                            isAdmin = false,
                                             Role = role
                                           };
 
