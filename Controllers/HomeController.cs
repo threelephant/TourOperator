@@ -129,6 +129,10 @@ namespace TourOperator.Controllers
                                 .Include(t => t.Hotel)
                                 .Include(t => t.FlightArrival)
                                     .ThenInclude(f => f.AirportArrival)
+                                .Include(t => t.FlightArrival)
+                                    .ThenInclude(f => f.AirportDeparture) 
+                                .Include(t => t.FlightDeparture)
+                                    .ThenInclude(f => f.AirportArrival)
                                 .Include(t => t.FlightDeparture)
                                     .ThenInclude(f => f.AirportDeparture)
                                 .OrderBy(t => t.TimeBooking);
