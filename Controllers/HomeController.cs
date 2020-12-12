@@ -115,7 +115,7 @@ namespace TourOperator.Controllers
             await db.Tours.AddAsync(tour);
             await db.SaveChangesAsync();
 
-            return RedirectToAction("hotels");
+            return RedirectToAction("tours");
         }
 
         [HttpGet]
