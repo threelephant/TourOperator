@@ -3,9 +3,10 @@
     var isAdmin = User.IsInRole("admin");
 }
 
+<div class="navbar-fixed">
 <nav class="red darken-4">
     <div class="nav-wrapper">
-        <a asp-action="Index" asp-controller="Home" class="brand-logo" id="tour-logo">Турагенство "Красная птица"</a>
+        <a asp-action="Index" asp-controller="Home" class="brand-logo" id="tour-logo">Турагенство &laquo;Красная птица&raquo;</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a asp-action="hotels" asp-controller="home">Отели</a></li>
         @if (isAdmin)
@@ -27,3 +28,4 @@
     </div>
 <br>
 </nav>
+</div>

@@ -2,37 +2,65 @@
     ViewData["Title"] = "Мои туры";
 }
 
-<br>
 <h2>Мои туры</h2>
 @foreach (Tour tour in ViewBag.Tours)
 {
-  <h3>@tour.Hotel.Name</h3>
-  <img src="@tour.Hotel.Image" alt="@tour.Hotel.Image" style="height: 180px; width: auto" />
+  <div class="row">
+    <img class="col s6" src="@tour.Hotel.Image" alt="@tour.Hotel.Image" style="height: 220px; width: auto" />
+    <h3 class="col s6"> @tour.Hotel.Name</h3>
+  </div>
 
-  <ul class="collection">
-    <li class="collection-item">Взрослых: @tour.AdultNumber</li>
-    <li class="collection-item">Детей: @tour.ChildNumber</li>
-    <li class="collection-item">Цена тура: @tour.Price рублей</li>
-    <li class="collection-item">Дата начала тура: @tour.TimeArrival.Date.ToString("dd.MM.yyyy")</li>
-    <li class="collection-item">Дата окончания тура: @tour.TimeDeparture.Date.ToString("dd.MM.yyyy")</li>
-  </ul>
-  <ul class="collection">
+  <table>
+    <tbody>
+      <tr>
+        <td>Взрослых</td>
+        <td>@tour.AdultNumber</td>
+      </tr>
+      <tr>
+        <td>Детей</td>
+        <td>@tour.ChildNumber</td>
+      </tr>
+      <tr>
+        <td>Цена тура</td>
+        <td>@tour.Price рублей</td>
+      </tr>
+      <tr>
+        <td>@tour.TimeArrival.Date.ToString("dd.MM.yyyy")</td>
+        <td>@tour.AdultNumber</td>
+      </tr>
+      <tr>
+        <td>Дата окончания тура</td>
+        <td>@tour.TimeDeparture.Date.ToString("dd.MM.yyyy")</td>
+      </tr>
+
   @if (@tour.FlightDepartureId != null)
   {
-    <li class="collection-item">Маршрут в страну нахождения отеля: из @tour.FlightDeparture.AirportArrival.Name до @tour.FlightDeparture.AirportDeparture.Name</li>
+    <tr>
+      <td>Маршрут в страну нахождения отеля</td>
+      <td>из @tour.FlightDeparture.AirportArrival.Name до @tour.FlightDeparture.AirportDeparture.Name</td>
+    </tr>
   }
-  else
-  {
-    @Html.ActionLink($"Заказать билет до отеля", "flight", new { @id = tour.TourId, isDeparture = true }, new { @class = "collection-item"})
-  }
-  
   @if (@tour.FlightArrivalId != null)
   {
-    <li class="collection-item">Обратный маршрут: из @tour.FlightArrival.AirportArrival.Name до @tour.FlightArrival.AirportDeparture.Name</li>
+    <tr>
+      <td>Обратный маршрут</td>
+      <td>из @tour.FlightArrival.AirportArrival.Name до @tour.FlightArrival.AirportDeparture.Name</td>
+    </tr>
   }
-  else
+    </tbody>  
+  </table>
+  @if (@tour.FlightDepartureId == null || @tour.FlightArrivalId == null)
   {
-    @Html.ActionLink($"Заказать обратный билет", "flight", new { @id = tour.TourId, isDeparture = false }, new { @class = "collection-item"})
+    <br>
   }
-  </ul>
+  @if (@tour.FlightDepartureId == null)
+  {
+    @Html.ActionLink("Заказать билет до отеля", "flight", new { @id = tour.TourId, isDeparture = true }, new {@class = "waves-effect waves-light btn-large", @style = "text-transform: initial;" })
+  }
+  <span>&nbsp;</span>
+  @if (@tour.FlightArrivalId == null)
+  {
+    @Html.ActionLink("Заказать обратный билет", "flight", new { @id = tour.TourId, isDeparture = false }, new {@class = "waves-effect waves-light btn-large", @style = "text-transform: initial;" })
+  }
+  <br><br><br>
 }

@@ -9,7 +9,7 @@
 <p class="grey-text text-darken-1 start-paragraph-text info">Питание: @ViewBag.Hotel.Food.Name</p>
 <p>@Html.Raw(@ViewBag.Hotel.Description)</p>
 
-@Html.ActionLink("Забронировать", "tour", new { @hotelId = @ViewBag.Hotel.HotelId }, new {@class = "waves-effect waves-light btn-large"})
+@Html.ActionLink("Забронировать", "tour", new { @hotelId = @ViewBag.Hotel.HotelId }, new {@class = "waves-effect waves-light btn-large", @style = "text-transform: initial;" })
 
 @model Review
 
@@ -27,18 +27,18 @@ else if (User.Identity.Name != null)
 <form asp-action="review" asp-controller="home" asp-antiforgery="true">
     <div asp-validation-summary="ModelOnly"></div>
     <div>
-        <label asp-for="UserRaiting">Рейтинг</label>
+        <label asp-for="UserRaiting" style="font-size: 20px; color: #757575;">Оценка: <span class="rating-value">3</span></label>
         <p class="range-field">
-            <input type="range" asp-for="UserRaiting" min="1" max="5" />
+            <input class="rating" type="range" asp-for="UserRaiting" min="1" max="5" />
         </p>
     </div>
     
     <div>
-        <label asp-for="Text">Комментарий</label>
+        <label asp-for="Text" style="font-size: 20px; color: #757575;">Комментарий:</label>
         <textarea class="materialize-textarea" asp-for="Text"></textarea>
     </div>
     
-    <button class="btn waves-effect waves-light" type="submit" name="action">Добавить</button>
+    <button class="btn waves-effect waves-light" type="submit" name="action" style="text-transform: initial;">Добавить</button>
 
     <input type="hidden" asp-for="HotelId" value="@ViewBag.Hotel.HotelId" />
 </form>
@@ -48,8 +48,8 @@ else if (User.Identity.Name != null)
 else
 {
     <h5>Войдите или зарегистрируйтесь для комментирования</h5>
-    <a class="waves-effect waves-light btn" asp-action="Login" asp-controller="Account">Войти</a>
-    <a class="waves-effect waves-light btn" asp-action="Register" asp-controller="Account">Регистрация</a>
+    <a class="waves-effect waves-light btn" asp-action="Login" asp-controller="Account" style="text-transform: initial;">Войти</a>
+    <a class="waves-effect waves-light btn" asp-action="Register" asp-controller="Account" style="text-transform: initial;">Регистрация</a>
 }
 
 @if (ViewBag.Hotel.Reviews.Count >= 1)
@@ -72,4 +72,16 @@ else
       </div>
     </div>
   </div>
+}
+
+@section scripts
+{
+    <script>
+      $(".rating").on("change", function()
+      {
+        var slider_value = $(".rating").val();
+        var rating_field = $(".rating-value");
+        rating_field[0].textContent = slider_value;
+      });
+    </script>
 }
